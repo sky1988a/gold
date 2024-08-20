@@ -1,86 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>黄金计算器</title>
-</head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            margin: 0;
+        }
 
+        h2 {
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        #resultTableWrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            overflow-x: auto;
+            margin: 0 auto;
+        }
+
+        #resultTable {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        #resultTable th, #resultTable td {
+            text-align: center;
+            font-size: 0.9em;
+            padding: 8px;
+        }
+
+        /* 针对电脑端的样式 */
+        @media (min-width: 601px) {
+            form table {
+                width: 50%;
+            }
+
+            #resultTableWrapper {
+                width: 50%;
+                margin: 0 auto;
+            }
+
+            #resultTable {
+                width: 100%;
+                max-width: none;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            #resultTable th, #resultTable td {
+                font-size: 1em;
+            }
+
+            form table input {
+                font-size: 1em;
+                padding: 5px;
+            }
+        }
+
+        /* 针对手机端的样式 */
+        @media (max-width: 600px) {
+            table, #resultTable {
+                width: 100%;
+            }
+
+            form {
+                width: 100%;
+                padding: 0;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            #resultTable th, #resultTable td {
+                padding: 6px;
+                font-size: 0.8em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+
+            form table input {
+                font-size: 0.9em;
+                padding: 3px;
+            }
+        }
+    </style>
+</head>
 <body>
-    <h2 style="text-align: center;">黄金计算器</h2>
+    <h2>黄金计算器</h2>
     <form action="">
-        <table style="margin: 0 auto;">
+        <table>
             <tr>
                 <td><label for="principal">本金：</label></td>
-                <td><input type="number" id="principal" name="principal"></td>
+                <td><input type="number" id="principal" name="principal" style="width: 95%;"></td>
             </tr>
             <tr>
                 <td><label for="buy_price">买入价：</label></td>
-                <td><input type="number" id="buy_price" name="buy_price"></td>
+                <td><input type="number" id="buy_price" name="buy_price" style="width: 95%;"></td>
             </tr>
             <tr>
                 <td><label for="sell_price">卖出价：</label></td>
-                <td><input type="number" id="sell_price" name="sell_price"></td>
-            </tr>
-            <tr>
-                <td><label>克重：</label></td>
-                <td><span id="weight"></span></td>
-            </tr>
-            <tr>
-                <td><label>差额：</label></td>
-                <td><span id="difference"></span></td>
-            </tr>
-            <tr>
-                <td><label>利润：</label></td>
-                <td><span id="profit"></span></td>
-            </tr>
-            <tr>
-                <td><label>年利率：</label></td>
-                <td><span id="annual_interest_rate"></span></td>
-            </tr>
-            <tr>
-                <td><label>手续费：</label></td>
-                <td><span id="handling_fee"></span></td>
+                <td><input type="number" id="sell_price" name="sell_price" style="width: 95%;"></td>
             </tr>
         </table>
     </form>
 
+    <h2>计算结果</h2>
+    <div id="resultTableWrapper">
+        <table id="resultTable" border="1">
+            <thead>
+                <tr>
+                    <th>买入价</th>
+                    <th>卖出价</th>
+                    <th>克重</th>
+                    <th>差额</th>
+                    <th>利润</th>
+                    <th>年利率</th>
+                    <th>手续费</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 数据行将会插入到这里 -->
+            </tbody>
+        </table>
+    </div>
+
     <script>
-        // 计算函数
         function calculate() {
             var principal = parseFloat(document.getElementById("principal").value);
             var buy_price = parseFloat(document.getElementById("buy_price").value);
             var sell_price = parseFloat(document.getElementById("sell_price").value);
-
-            if (isNaN(principal) || isNaN(buy_price) || isNaN(sell_price)) {
-                document.getElementById("weight").innerHTML = "输入有误";
-                document.getElementById("difference").innerHTML = "输入有误";
-                document.getElementById("profit").innerHTML = "输入有误";
-                document.getElementById("annual_interest_rate").innerHTML = "输入有误";
-                document.getElementById("handling_fee").innerHTML = "输入有误";
-                return;
-            }
-
+            
             var weight = principal / buy_price;
-            var difference = sell_price - buy_price;
-            var handling_fee = weight * 2.5;
-            var profit = weight * difference - handling_fee;
-            var annual_interest_rate = (profit / principal) * 100;
+            var tableBody = document.getElementById("resultTable").getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ""; // 清空表格内容
 
-            document.getElementById("weight").innerHTML = weight.toFixed(2);
-            document.getElementById("difference").innerHTML = difference.toFixed(2);
-            document.getElementById("profit").innerHTML = profit.toFixed(2);
-            document.getElementById("annual_interest_rate").innerHTML = annual_interest_rate.toFixed(2) + "%";
-            document.getElementById("handling_fee").innerHTML = handling_fee.toFixed(2);
+            for (var i = 0; i < 30; i++) { // 生成30行数据
+                var currentSellPrice = sell_price + i;
+                var difference = currentSellPrice - buy_price;
+                var handling_fee = currentSellPrice * weight * 0.003;
+                var profit = weight * difference - handling_fee;
+                var annual_interest_rate = (profit / principal) * 100;
+                
+                var row = tableBody.insertRow();
+                row.insertCell(0).innerText = buy_price.toFixed(2);
+                row.insertCell(1).innerText = currentSellPrice.toFixed(2);
+                row.insertCell(2).innerText = weight.toFixed(2);
+                row.insertCell(3).innerText = difference.toFixed(2);
+                
+                // 插入利润列，并将字体颜色设置为红色
+                var profitCell = row.insertCell(4);
+                profitCell.innerText = profit.toFixed(2);
+                profitCell.style.color = "red";
+                
+                row.insertCell(5).innerText = annual_interest_rate.toFixed(2) + "%";
+                row.insertCell(6).innerText = handling_fee.toFixed(2);
+            }
         }
 
-        // 为输入框添加输入事件监听
         document.getElementById("principal").addEventListener("input", calculate);
         document.getElementById("buy_price").addEventListener("input", calculate);
         document.getElementById("sell_price").addEventListener("input", calculate);
     </script>
 </body>
-
 </html>
