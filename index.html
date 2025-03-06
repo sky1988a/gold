@@ -1,197 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>黄金计算器</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 10px;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      margin: 0;
+    }
 
-        h2 {
-            text-align: center;
-            font-size: 1.5em;
-        }
+    h2 {
+      text-align: center;
+      font-size: 1.5em;
+    }
 
-        form {
-            margin-bottom: 20px;
-            text-align: center;
-        }
+    form {
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-        table {
-            margin: 0 auto;
-            width: 100%;
-            max-width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+    table {
+      margin: 0 auto;
+      width: 100%;
+      max-width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
 
-        th, td {
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
 
-        #resultTableWrapper {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            overflow-x: auto;
-            margin: 0 auto;
-        }
+    #resultTableWrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      overflow-x: auto;
+      margin: 0 auto;
+    }
 
-        #resultTable {
-            width: 100%;
-            max-width: 800px;
-            border-collapse: collapse;
-            text-align: center;
-        }
+    #resultTable {
+      width: 100%;
+      max-width: 800px;
+      border-collapse: collapse;
+      text-align: center;
+    }
 
-        #resultTable th, #resultTable td {
-            text-align: center;
-            font-size: 0.9em;
-            padding: 8px;
-        }
+    #resultTable th,
+    #resultTable td {
+      text-align: center;
+      font-size: 0.9em;
+      padding: 8px;
+    }
 
-        /* 针对电脑端的样式 */
-        @media (min-width: 601px) {
-            form table {
-                width: 50%;
-            }
+    /* 选项卡样式 */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
 
-            #resultTableWrapper {
-                width: 50%;
-                margin: 0 auto;
-            }
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 1em;
+    }
 
-            #resultTable {
-                width: 100%;
-                max-width: none;
-            }
+    .tab button:hover {
+      background-color: #ddd;
+    }
 
-            h2 {
-                font-size: 2em;
-            }
+    .tab button.active {
+      background-color: #ccc;
+    }
 
-            #resultTable th, #resultTable td {
-                font-size: 1em;
-            }
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
 
-            form table input {
-                font-size: 1em;
-                padding: 5px;
-            }
-        }
+    /* 电脑端样式 */
+    @media (min-width: 601px) {
+      form table {
+        width: 40%;
+      }
 
-        /* 针对手机端的样式 */
-        @media (max-width: 600px) {
-            table, #resultTable {
-                width: 100%;
-            }
+      #resultTableWrapper {
+        width: 60%;
+        margin-top: 20px;
+      }
 
-            form {
-                width: 100%;
-                padding: 0;
-            }
+      #resultTable {
+        width: 100%;
+        max-width: none;
+      }
 
-            table {
-                font-size: 0.9em;
-            }
+      h2 {
+        font-size: 2em;
+      }
 
-            #resultTable th, #resultTable td {
-                padding: 6px;
-                font-size: 0.8em;
-            }
+      #resultTable th,
+      #resultTable td {
+        font-size: 1em;
+      }
 
-            h2 {
-                font-size: 1.2em;
-            }
+      form table input {
+        font-size: 1em;
+        padding: 5px;
+      }
+    }
 
-            form table input {
-                font-size: 0.9em;
-                padding: 3px;
-            }
-        }
-    </style>
+    /* 手机端样式 */
+    @media (max-width: 600px) {
+      table,
+      #resultTable {
+        width: 100%;
+      }
+
+      form {
+        width: 100%;
+        padding: 0;
+      }
+
+      table {
+        font-size: 0.9em;
+      }
+
+      #resultTable th,
+      #resultTable td {
+        padding: 6px;
+        font-size: 0.8em;
+      }
+
+      h2 {
+        font-size: 1.2em;
+      }
+
+      form table input {
+        font-size: 0.9em;
+        padding: 3px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <h2>黄金计算器</h2>
-    <form action="">
-        <table>
-            <tr>
-                <td><label for="principal">本金：</label></td>
-                <td><input type="number" id="principal" name="principal" style="width: 95%;"></td>
-            </tr>
-            <tr>
-                <td><label for="buy_price">买入价：</label></td>
-                <td><input type="number" id="buy_price" name="buy_price" style="width: 95%;"></td>
-            </tr>
-            <tr>
-                <td><label for="sell_price">卖出价：</label></td>
-                <td><input type="number" id="sell_price" name="sell_price" style="width: 95%;"></td>
-            </tr>
-        </table>
+  <!-- 选项卡容器 -->
+  <div class="tab">
+    <button class="tablinks" onclick="openCalculator(event, 'kwjc')">均价计算器</button>
+    <button class="tablinks active" onclick="openCalculator(event, 'hjjs')">利润计算器</button>
+  </div>
+
+  <!-- 均价计算器内容 -->
+  <div id="kwjc" class="tabcontent">
+    <h2>均价计算器</h2>
+
+    <!-- 第一个物品的输入表单 -->
+    <form id="item1Form" onsubmit="event.preventDefault(); calculate();">
+      <table>
+        <tr>
+          <td><label for="weight1">第一次购买克重：</label></td>
+          <td><input type="number" id="weight1" step="0.01" required></td>
+        </tr>
+        <tr>
+          <td><label for="price1">第一次购买均价：</label></td>
+          <td><input type="number" id="price1" step="0.01" required></td>
+        </tr>
+      </table>
     </form>
 
+    <!-- 第二个物品的输入表单 -->
+    <form id="item2Form" onsubmit="event.preventDefault(); calculate();">
+      <table>
+        <tr>
+          <td><label for="weight2">第二次购买克重：</label></td>
+          <td><input type="number" id="weight2" step="0.01" required></td>
+        </tr>
+        <tr>
+          <td><label for="price2">第二次购买均价：</label></td>
+          <td><input type="number" id="price2" step="0.01" required></td>
+        </tr>
+      </table>
+    </form>
+
+    <!-- 计算按钮 -->
+    <button onclick="calculate()">计算后克重和均价</button>
+
+    <!-- 用于显示结果的段落 -->
+    <p id="result"></p>
+  </div>
+
+  <!-- 利润计算器内容 -->
+  <div id="hjjs" class="tabcontent" style="display: block;">
+    <h2>利润计算器</h2>
+    <form onsubmit="event.preventDefault(); calculateGold();">
+      <table>
+        <tr>
+          <td><label for="weight">持仓克重：</label></td>
+          <td><input type="number" id="weight" name="weight" style="width: 95%;" required></td>
+        </tr>
+        <tr>
+          <td><label for="buy_price">当前买价：</label></td>
+          <td><input type="number" id="buy_price" name="buy_price" style="width: 95%;" required></td>
+        </tr>
+        <tr>
+          <td><label for="sell_price">计划卖价：</label></td>
+          <td><input type="number" id="sell_price" name="sell_price" style="width: 95%;" required></td>
+        </tr>
+        <tr>
+          <td><label for="purchase_principal">买入本金：</label></td>
+          <td><input type="text" id="purchase_principal" name="purchase_principal" style="width: 95%;" readonly></td>
+        </tr>
+      </table>
+    </form>
     <h2>计算结果</h2>
     <div id="resultTableWrapper">
-        <table id="resultTable" border="1">
-            <thead>
-                <tr>
-                    <th>买入价</th>
-                    <th>卖出价</th>
-                    <th>克重</th>
-                    <th>差额</th>
-                    <th>利润</th>
-                    <th>年利率</th>
-                    <th>手续费</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 数据行将会插入到这里 -->
-            </tbody>
-        </table>
+      <table id="resultTable" border="1" class="hjjs">
+        <thead>
+          <tr>
+            <th>买入价</th>
+            <th>卖出价</th>
+            <th>差额</th>
+            <th>利润</th>
+            <th>年利率</th>
+            <th>手续费</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 数据行将会插入到这里 -->
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <script>
-        function calculate() {
-            var principal = parseFloat(document.getElementById("principal").value);
-            var buy_price = parseFloat(document.getElementById("buy_price").value);
-            var sell_price = parseFloat(document.getElementById("sell_price").value);
-            
-            var weight = principal / buy_price;
-            var tableBody = document.getElementById("resultTable").getElementsByTagName('tbody')[0];
-            tableBody.innerHTML = ""; // 清空表格内容
+  <script>
+    // 切换选项卡显示
+    function openCalculator(evt, calculatorName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(calculatorName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
 
-            for (var i = 0; i < 30; i++) { // 生成30行数据
-                var currentSellPrice = sell_price + i;
-                var difference = currentSellPrice - buy_price;
-                var handling_fee = currentSellPrice * weight * 0.003;
-                var profit = weight * difference - handling_fee;
-                var annual_interest_rate = (profit / principal) * 100;
-                
-                var row = tableBody.insertRow();
-                row.insertCell(0).innerText = buy_price.toFixed(2);
-                row.insertCell(1).innerText = currentSellPrice.toFixed(2);
-                row.insertCell(2).innerText = weight.toFixed(2);
-                row.insertCell(3).innerText = difference.toFixed(2);
-                
-                // 插入利润列，并将字体颜色设置为红色
-                var profitCell = row.insertCell(4);
-                profitCell.innerText = profit.toFixed(2);
-                profitCell.style.color = "red";
-                
-                row.insertCell(5).innerText = annual_interest_rate.toFixed(2) + "%";
-                row.insertCell(6).innerText = handling_fee.toFixed(2);
-            }
-        }
+    // 均价计算器计算函数
+    function calculate() {
+      var weight1 = parseFloat(document.getElementById('weight1').value);
+      var price1 = parseFloat(document.getElementById('price1').value);
+      var weight2 = parseFloat(document.getElementById('weight2').value);
+      var price2 = parseFloat(document.getElementById('price2').value);
 
-        document.getElementById("principal").addEventListener("input", calculate);
-        document.getElementById("buy_price").addEventListener("input", calculate);
-        document.getElementById("sell_price").addEventListener("input", calculate);
-    </script>
+      var totalWeight = weight1 + weight2;
+      var totalValue = (weight1 * price1) + (weight2 * price2);
+      var averageWeight = totalWeight;
+      var averagePrice = totalValue / totalWeight;
+
+      document.getElementById('result').innerHTML = `计算后克重为：${averageWeight}克，均价为：${averagePrice.toFixed(2)}元/克`;
+    }
+
+    // 计算买入本金
+    function calculatePurchasePrincipal() {
+      var weight = parseFloat(document.getElementById("weight").value);
+      var buy_price = parseFloat(document.getElementById("buy_price").value);
+      if (!isNaN(weight) &&!isNaN(buy_price)) {
+        var purchase_principal = weight * buy_price;
+        document.getElementById("purchase_principal").value = purchase_principal.toFixed(2);
+      } else {
+        document.getElementById("purchase_principal").value = "";
+      }
+    }
+
+    // 利润计算器计算函数
+    function calculateGold() {
+      var weight = parseFloat(document.getElementById("weight").value);
+      var buy_price = parseFloat(document.getElementById("buy_price").value);
+      var sell_price = parseFloat(document.getElementById("sell_price").value);
+
+      calculatePurchasePrincipal();
+
+      var tableBody = document.getElementById("resultTable").getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = "";
+      for (var i = 0; i < 30; i++) {
+        var currentSellPrice = sell_price + i;
+        var difference = currentSellPrice - buy_price;
+        var handling_fee = currentSellPrice * weight * 0.003;
+        var profit = weight * difference - handling_fee;
+        var annual_interest_rate = (profit / (weight * buy_price)) * 100;
+
+        var row = tableBody.insertRow();
+        row.insertCell(0).innerText = buy_price.toFixed(2);
+        row.insertCell(1).innerText = currentSellPrice.toFixed(2);
+        row.insertCell(2).innerText = difference.toFixed(2);
+        var profitCell = row.insertCell(3);
+        profitCell.innerText = profit.toFixed(2);
+        profitCell.style.color = "red";
+        row.insertCell(4).innerText = annual_interest_rate.toFixed(2) + "%";
+        var handlingFeeCell = row.insertCell(5);
+        handlingFeeCell.innerText = handling_fee.toFixed(2);
+        handlingFeeCell.style.color = "blue";
+      }
+    }
+
+    // 为利润计算器输入框添加实时计算事件
+    document.getElementById("weight").addEventListener("input", calculateGold);
+    document.getElementById("buy_price").addEventListener("input", calculateGold);
+    document.getElementById("sell_price").addEventListener("input", calculateGold);
+  </script>
 </body>
+
 </html>
