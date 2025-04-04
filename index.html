@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>黄金计算器与历史价格</title>
+  <title>计算与价格</title>
   <!-- 引用本地的 Bootstrap 样式 -->
   <link href="bootstrap.min.css" rel="stylesheet">
   <style>
@@ -68,9 +68,9 @@
       overflow-x: auto;
       border: 1px solid #ccc;
       background-color: #f1f1f1;
-      margin: 20px;
+      margin: 1px;
       border-radius: 8px;
-      padding: 5px;
+      padding: 1px;
     }
 
     .tab button {
@@ -91,6 +91,12 @@
     .tab button.active {
       background-color: #ccc;
     }
+    
+    .tab button.active {
+    background-color: #ccc;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+}
 
     /* 在小屏幕上缩小字体 */
     @media (max-width: 768px) {
@@ -113,10 +119,11 @@
 
     .tabcontent {
       display: none;
-      padding: 6px 12px;
+      padding: 2px 4px;
       border: 1px solid #ccc;
       border-top: none;
       border-radius: 0 0 8px 8px;
+      margin-top: 1px; /* 增加顶部外边距 */
     }
 
     /* 历史价格页面样式 */
@@ -237,7 +244,7 @@
       }
     }
 
-    /* 均价计算器结果居中 */
+    /* 均价计算结果居中 */
     #result {
       text-align: center;
       margin: 20px 0;
@@ -245,7 +252,7 @@
       font-weight: bold;
     }
 
-    /* 利润计算器输入框对齐 */
+    /* 利润计算输入框对齐 */
     .form-table {
       width: 100%;
       max-width: 800px;
@@ -293,17 +300,16 @@
 </head>
 
 <body>
-  <!-- 选项卡容器 -->
+  <!-- 选项卡容 -->
   <div class="tab">
-    <button class="tablinks" onclick="openCalculator(event, 'kwjc')">均价计算器</button>
-    <button class="tablinks active" onclick="openCalculator(event, 'hjjs')">利润计算器</button>
-    <button class="tablinks" onclick="openCalculator(event, 'goldprice')">历史价格走势</button>
+    <button class="tablinks" onclick="openCalculator(event, 'kwjc')">均价计算</button>
+    <button class="tablinks active" onclick="openCalculator(event, 'hjjs')">利润计算</button>
+    <button class="tablinks" onclick="openCalculator(event, 'goldprice')">历史价格</button>
   </div>
 
-  <!-- 均价计算器内容 -->
+  <!-- 均价计算内容 -->
   <div id="kwjc" class="tabcontent">
     <div class="container">
-      <h2>均价计算器</h2>
 
       <!-- 第一个物品的输入表单 -->
       <form id="item1Form">
@@ -338,10 +344,9 @@
     </div>
   </div>
 
-  <!-- 利润计算器内容 -->
+  <!-- 利润计算内容 -->
   <div id="hjjs" class="tabcontent" style="display: block;">
     <div class="container">
-      <h2>利润计算器</h2>
       <form onsubmit="event.preventDefault(); calculateGold();">
         <table class="form-table">
           <colgroup>
@@ -390,10 +395,9 @@
     </div>
   </div>
 
-  <!-- 历史价格走势内容 -->
+ <!-- 历史价格走势内容 -->
   <div id="goldprice" class="tabcontent">
     <div class="container">
-      <h2 class="text-center mb-4">京东黄金历史价格走势</h2>
 
       <form method="get" class="control-panel" id="form">
         <div class="row g-3">
@@ -459,16 +463,27 @@
       var averageWeight = totalWeight;
       var averagePrice = totalWeight > 0 ? (totalValue / totalWeight).toFixed(2) : 0;
 
-      document.getElementById('result').innerHTML = `计算后克重为：${averageWeight}克，均价为：${averagePrice}元/克`;
-    }
-
-    // 自动计算均价和克重
+      document.getElementById('result').innerHTML = `克重为：${averageWeight}克<br>均价为：${averagePrice}元`;
+      }
+      // 自动计算均价和克重
     document.getElementById("weight1").addEventListener("input", calculate);
     document.getElementById("price1").addEventListener("input", calculate);
     document.getElementById("weight2").addEventListener("input", calculate);
     document.getElementById("price2").addEventListener("input", calculate);
+    
+    // 计算买入本金
+    function calculatePurchasePrincipal() {
+      var weight = parseFloat(document.getElementById("weight").value);
+      var buy_price = parseFloat(document.getElementById("buy_price").value);
+      if (!isNaN(weight) && !isNaN(buy_price)) {
+        var purchase_principal = weight * buy_price;
+        document.getElementById("purchase_principal").value = purchase_principal.toFixed(2);
+      } else {
+        document.getElementById("purchase_principal").value = "";
+      }
+    }
 
-    // 利润计算器计算函数
+    // 利润计算计算函数
     function calculateGold() {
       var weight = parseFloat(document.getElementById("weight").value);
       var buy_price = parseFloat(document.getElementById("buy_price").value);
@@ -499,22 +514,18 @@
       }
     }
 
-    // 为利润计算器输入框添加实时计算事件
+    // 为利润计算输入框添加实时计算事件
     document.getElementById("weight").addEventListener("input", calculateGold);
     document.getElementById("buy_price").addEventListener("input", calculateGold);
     document.getElementById("sell_price").addEventListener("input", calculateGold);
 
-    // 计算买入本金
-    function calculatePurchasePrincipal() {
-      var weight = parseFloat(document.getElementById("weight").value);
-      var buy_price = parseFloat(document.getElementById("buy_price").value);
-      if (!isNaN(weight) && !isNaN(buy_price)) {
-        var purchase_principal = weight * buy_price;
-        document.getElementById("purchase_principal").value = purchase_principal.toFixed(2);
-      } else {
-        document.getElementById("purchase_principal").value = "";
-      }
-    }
+    // 获取当前日期并设置到输入框
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    document.getElementById('dateInput').value = formattedDate;
 
     // 初始化图表
     const chart = echarts.init(document.getElementById('chart'));
@@ -523,18 +534,13 @@
     function fetchData() {
       const form = document.getElementById('form');
       const formData = new FormData(form);
-      const url = 'api.php?' + new URLSearchParams(formData).toString();
+      const url = 'https://goldprice.mayaa.eu.org/api.php?' + new URLSearchParams(formData).toString();
 
       fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           if (data.error) {
-            // 如果有错误，静默处理，不显示任何提示
+            alert(data.error);
             return;
           }
 
@@ -557,8 +563,10 @@
                 interval: function (index) {
                   if (window.innerWidth <= 768) {
                     return index % 30 === 0;
+                    // 手机端每30个显示一个标签
                   } else {
                     return index % 15 === 0;
+                    // 电脑端每15个显示一个标签
                   }
                 }
               },
@@ -570,6 +578,7 @@
               max: Math.ceil(parseFloat(data.maxPrice)),
               axisLabel: {
                 formatter: value => parseInt(value)
+                // 只显示整数部分
               }
             },
             grid: {
@@ -600,15 +609,18 @@
                 borderWidth: 2
               }
             }],
+            // 添加 dataZoom 组件
             dataZoom: [
               {
                 type: 'inside',
+                // 内置型 dataZoom 组件
                 xAxisIndex: 0,
                 start: 0,
                 end: 100
               },
               {
                 type: 'slider',
+                // 滑动条型 dataZoom 组件
                 xAxisIndex: 0,
                 show: true,
                 height: 20,
@@ -625,8 +637,8 @@
           document.getElementById('max-price').textContent = data.maxPrice + ' (' + data.maxTime + ')';
         })
         .catch(error => {
-          // 静默处理错误，不显示任何提示
           console.error('Error:', error);
+          alert('数据获取失败，请稍后重试');
         });
     }
 
